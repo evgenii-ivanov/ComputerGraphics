@@ -36,41 +36,23 @@ namespace Lab1_WF
         };
         private int brushIndex = 0;
         private int framesPerBrush = 20;
+        private Graphics g;
 
         public Form()
         {
             InitializeComponent();
             triangle = new Triangle(0, 0, -50, 50, 100, 100, 111);
-            backgroundImage = Image.FromFile(@"E:\Projects\CG_Sem5\Lab1_WF\s400.jpg");
-            SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
-        }
-
-        private void Form_Paint(object sender, PaintEventArgs e)
-        {
-            var g = e.Graphics;
-            g.Clear(Color.White);
-            switch (buttonPressCounter)
-            {
-                case 0:
-                    var transformMatrix = new Matrix(1, 0, 0, -1, this.Width / 2, this.Height / 2);
-                    g.Transform = transformMatrix;
-                    MoveTriangle();
-                    frameCount++;
-                    frameCount %= framesPerBrush;
-                    if (frameCount == 0)
-                    {
-                        brushIndex++;
-                        brushIndex %= brushes.Length;
-                    }
-                    g.FillTriangle(brushes[brushIndex], triangle);
-                    break;
-                case 2:
-                    g.DrawImage(backgroundImage, new PointF { X = 0, Y = 0 });
-                    break;
-                default:
-                    break;
-            }
-            button.Enabled = true;
+            backgroundImage = Image.FromFile(@"E:\Projects\CG_Sem5\Lab1_WF\sprite.jpg");
+            g = pictureBox.CreateGraphics();
+            var transformMatrix = new Matrix(1, 0, 0, -1, this.pictureBox.Width / 2, this.pictureBox.Height / 2);
+            g.Transform = transformMatrix;
+            DoubleBuffered = true;
+            this.SetStyle(
+                ControlStyles.AllPaintingInWmPaint |
+                ControlStyles.UserPaint |
+                ControlStyles.DoubleBuffer,
+                true
+            );
         }
 
         private void MoveTriangle()
@@ -86,7 +68,7 @@ namespace Lab1_WF
                 signY = 1;
             }
             triangle.Move(Axis.Y, signY);
-            if (triangle.UpperY >= this.Height / 2 || triangle.LowerY <= -this.Height / 2)
+            if (triangle.UpperY >= this.pictureBox.Height / 2 || triangle.LowerY <= -this.pictureBox.Height / 2)
             {
                 triangle.Reflect(Axis.X);
                 currentDx = 0.0f;
@@ -100,7 +82,7 @@ namespace Lab1_WF
                 currentDx -= 1.0f;
             }
             triangle.Move(Axis.X, signX * dx);
-            if ((triangle.RightX >= this.Width / 2 || triangle.LeftX <= - this.Width / 2) && !isVerticalEdgeCollided)
+            if ((triangle.RightX >= this.pictureBox.Width / 2 || triangle.LeftX <= - this.pictureBox.Width / 2) && !isVerticalEdgeCollided)
             {
                 triangle.Reflect(Axis.Y);
                 currentDx = 0.0f;
@@ -112,9 +94,40 @@ namespace Lab1_WF
             }
         }
 
+        private void PaintImage()
+        {
+            var transformMatrix = new Matrix(1, 0, 0, 1, this.pictureBox.Width / 2, this.pictureBox.Height / 2);
+            g.Transform = transformMatrix;
+            switch (buttonPressCounter)
+            {
+                case 0:
+                    g.Clear(Color.White);
+                    g.DrawImage(backgroundImage, new PointF { X = triangle.LeftX, Y = -triangle.UpperY });
+                    break;
+                case 1:
+                    g.Clear(Color.White);
+                    break;
+                case 2:
+                    g.DrawImage(backgroundImage, new PointF { X = triangle.LeftX, Y = -triangle.UpperY });
+                    break;
+            }
+            transformMatrix = new Matrix(1, 0, 0, -1, this.pictureBox.Width / 2, this.pictureBox.Height / 2);
+            g.Transform = transformMatrix;
+            MoveTriangle();
+            frameCount++;
+            frameCount %= framesPerBrush;
+            if (frameCount == 0)
+            {
+                brushIndex++;
+                brushIndex %= brushes.Length;
+            }
+            g.FillTriangle(brushes[brushIndex], triangle);
+            button.Enabled = true;
+        }
+
         private void timer_Tick(object sender, EventArgs e)
         {
-            Refresh();
+            PaintImage();
         }
 
         private static double DegreesToRadians(double deg)
