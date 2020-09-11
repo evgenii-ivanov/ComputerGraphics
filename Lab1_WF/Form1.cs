@@ -19,14 +19,13 @@ namespace Lab1_WF
     public partial class Form : System.Windows.Forms.Form
     {
 
-        protected static Triangle triangle;
-        protected static Graphics g;
-        protected int frameCount = 0;
-        protected Image backgroundImage;
-        protected float currentDx = 0.0f;
-        protected bool isVerticalEdgeCollided = false;
+        private static Triangle triangle;
+        private int frameCount = 0;
+        private Image backgroundImage;
+        private float currentDx = 0.0f;
+        private bool isVerticalEdgeCollided = false;
         private int buttonPressCounter = 0;
-        protected Brush[] brushes = {
+        private readonly Brush[] brushes = {
             Brushes.Black,
             Brushes.Yellow,
             Brushes.Blue,
@@ -35,7 +34,7 @@ namespace Lab1_WF
             Brushes.Gray,
             Brushes.Green
         };
-        protected int brushIndex = 0;
+        private int brushIndex = 0;
         private int framesPerBrush = 20;
 
         public Form()
@@ -43,19 +42,16 @@ namespace Lab1_WF
             InitializeComponent();
             triangle = new Triangle(0, 0, -50, 50, 100, 100, 111);
             backgroundImage = Image.FromFile(@"E:\Projects\CG_Sem5\Lab1_WF\s400.jpg");
+            SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
         }
 
         private void Form_Paint(object sender, PaintEventArgs e)
         {
-            g = e.Graphics;
+            var g = e.Graphics;
             g.Clear(Color.White);
             switch (buttonPressCounter)
             {
                 case 0:
-                    //DELETE THIS
-                    framesPerBrush = 20;
-                    //DELETE THIS
-                    timer.Interval = 50;
                     var transformMatrix = new Matrix(1, 0, 0, -1, this.Width / 2, this.Height / 2);
                     g.Transform = transformMatrix;
                     MoveTriangle();
@@ -69,31 +65,12 @@ namespace Lab1_WF
                     g.FillTriangle(brushes[brushIndex], triangle);
                     break;
                 case 2:
-                    //DELETE THIS
-                    framesPerBrush = 3;
-                    //DELETE THIS
-                    timer.Interval = 10;
                     g.DrawImage(backgroundImage, new PointF { X = 0, Y = 0 });
                     break;
                 default:
                     break;
             }
-            //DELETE THIS
-            if(buttonPressCounter == 2)
-            {
-                var transformMatrix = new Matrix(1, 0, 0, -1, this.Width / 2, this.Height / 2);
-                g.Transform = transformMatrix;
-                MoveTriangle();
-                frameCount++;
-                frameCount %= framesPerBrush;
-                if (frameCount == 0)
-                {
-                    brushIndex++;
-                    brushIndex %= brushes.Length;
-                }
-                g.FillTriangle(brushes[brushIndex], triangle);
-            }
-            button1.Enabled = true;
+            button.Enabled = true;
         }
 
         private void MoveTriangle()
@@ -114,7 +91,7 @@ namespace Lab1_WF
                 triangle.Reflect(Axis.X);
                 currentDx = 0.0f;
             }
-            var ctg = Math.Abs(1 / Math.Tan(DegreesToRadians(triangle.Angle)));
+            var ctg = Math.Abs(1.0 / Math.Tan(DegreesToRadians(triangle.Angle)));
             currentDx += (float) ctg;
             float dx = 0.0f;
             if (currentDx > 0.5f)
@@ -135,15 +112,9 @@ namespace Lab1_WF
             }
         }
 
-        private void Form_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            g.Dispose();
-        }
-
         private void timer_Tick(object sender, EventArgs e)
         {
-            Invalidate();
-
+            Refresh();
         }
 
         private static double DegreesToRadians(double deg)
@@ -151,16 +122,16 @@ namespace Lab1_WF
             return deg / 180.0f * Math.PI;
         }
 
-        private void label1_Click(object sender, EventArgs e)
+        private void crossLabel_Click(object sender, EventArgs e)
         {
             this.Close();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void button_Click(object sender, EventArgs e)
         {
             buttonPressCounter++;
             buttonPressCounter %= 3;
-            button1.Enabled = false;
+            button.Enabled = false;
         }
     }
 }

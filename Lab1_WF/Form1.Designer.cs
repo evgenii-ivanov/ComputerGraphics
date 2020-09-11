@@ -30,8 +30,8 @@
         {
             this.components = new System.ComponentModel.Container();
             this.timer = new System.Windows.Forms.Timer(this.components);
-            this.label1 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
+            this.crossLabel = new System.Windows.Forms.Label();
+            this.button = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // timer
@@ -40,38 +40,38 @@
             this.timer.Interval = 50;
             this.timer.Tick += new System.EventHandler(this.timer_Tick);
             // 
-            // label1
+            // crossLabel
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold);
-            this.label1.Location = new System.Drawing.Point(369, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(17, 16);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "X";
-            this.label1.Click += new System.EventHandler(this.label1_Click);
+            this.crossLabel.AutoSize = true;
+            this.crossLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold);
+            this.crossLabel.Location = new System.Drawing.Point(369, 0);
+            this.crossLabel.Name = "crossLabel";
+            this.crossLabel.Size = new System.Drawing.Size(17, 16);
+            this.crossLabel.TabIndex = 1;
+            this.crossLabel.Text = "X";
+            this.crossLabel.Click += new System.EventHandler(this.crossLabel_Click);
             // 
-            // button1
+            // button
             // 
-            this.button1.Location = new System.Drawing.Point(152, 226);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 2;
-            this.button1.Text = "Press me";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.button.Location = new System.Drawing.Point(152, 226);
+            this.button.Name = "button";
+            this.button.Size = new System.Drawing.Size(75, 23);
+            this.button.TabIndex = 2;
+            this.button.Text = "Press me";
+            this.button.UseVisualStyleBackColor = true;
+            this.button.Click += new System.EventHandler(this.button_Click);
             // 
             // Form
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(384, 261);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.button);
+            this.Controls.Add(this.crossLabel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "Form";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Компьютерная графика - Лабораторная работа №1";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form_FormClosing);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.Form_Paint);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -81,8 +81,8 @@
         #endregion
 
         private System.Windows.Forms.Timer timer;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Label crossLabel;
+        private System.Windows.Forms.Button button;
     }
 }
 
